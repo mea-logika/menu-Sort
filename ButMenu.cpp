@@ -4,6 +4,34 @@ struct TPoint
     {
     double x, y;
     };
+struct TBoxMenu
+    {
+     char* Title_;
+     void (*Sort_) (int MaxCount, int* CoutSwap, int* CountCompare);
+
+     TPoint Pos_;
+     bool Enable_;
+     bool Down_;
+     //void Init ();
+     //void Draw ();
+
+     //TSort Sort_;
+     //
+//     int (*Sort_) (int data[1000], int MaxCount);
+
+     };
+struct TMenu
+    {
+    int x0_, y0_, BoxW_, BoxH_;
+    int dx_, dy_;
+    COLORREF ColBox_, ColLine_, ColText_;
+
+    int MaxBox_ ;
+    TBoxMenu Menu_[];
+
+    void Init_(TBoxMenu Menu[], int MenuBoxs);
+    void Draw_();
+    }
 
 const int Size = 20;
 int data[Size];
@@ -17,27 +45,10 @@ const int LimitRandom = 4;
 int random (int down, int up);
 
 
-struct TBoxMenu
-    {
-     char* Title_;
-     void (*Sort_) (int MaxCount, int* CoutSwap, int* CountCompare);
+void Init (TBoxMenu Menu[], int MenuBoxs);
+void WhearMouseDown (TBoxMenu Menu[], int MenuBoxs);
 
-     TPoint Pos_, Size_;
-     bool Enable_;
-     bool Down_;
-     COLORREF Color_;
-     void Init ();
-     void Draw ();
-
-     //TSort Sort_;
-     //
-//     int (*Sort_) (int data[1000], int MaxCount);
-
-     };
-
-void WhearMouseDown();
 bool MouseInRect(TPoint A, TPoint W);
-
 void BubbleSort (int MaxCount, int* CountSwap, int* CountCompare);
 void SelectSort (int MaxCount, int* CountSwap, int* CountCompare);
 void QuickSort  (int MaxCount, int* CountSwap, int* CountCompare);
@@ -46,43 +57,54 @@ void DrawMass (double x1, double y1, double x2, double y2, int MaxCount);
 
 int main ()
     {
+
     txCreateWindow (800, 600);
+    const int MenuBoxs = 3;
+    Tmenu MenuSort = {20, 20, 200, 30, 5, 10, TX_BLUE, TX_BLUE, TX_WHITE,
+                            3, {{"BubbleSort", &BubbleSort},
+                                {"SelectSort", &SelectSort},
+                                {"QuickSort",  &QuickSort}
+                               }
+                     };
 
-    const int MenuBoxs=3;
-    TBoxMenu Menu[MenuBoxs] = {{"BubbleSort", &BubbleSort},
-                               {"SelectSort", &SelectSort},
-                               {"QuickSort",  &QuickSort},
-                               {}
-                               };
-    int i = 0;
-    while ( Menu[i].T)
-        {
-        Menu[i].Pos_.x = 20;
-        Menu[i].Size_.x = 200;
-        Menu[i].Size_.y = 30;
-        Menu[i].Pos_.y = 20 + i * ( Menu[i].Size_.y +4);
-        Menu[i].Enable_ = true;
-        Menu[i].Down_ = false;
-        Menu[i].Color_ = RGB(0, 100, 150);
-        Menu[i].Draw();; i++
-        }
+    MenuSort.Init();
+    MenuSort.Draw();
 
-    WhearMouseDown (Menu, MenuBoxs);
+    WhearMouseDown(); // (Menu, MenuBoxs);
 
     return 0;
+    }
+void TMenu::Init ()
+    {
+    int i = 0;
+    while (i < MaxBox) //( Menu[i].Title_ != "")
+        {
+        Menu_[i].Pos_.x = x0_ + i * ( BoxW_ + dx_);
+        Menu_[i].Pos_.y = y0_ + i * ( BoxH_ + dy_);
+        Menu_[i].Enable_ = true;
+        Menu_[i].Down_ = false;
+        i++;
+        }
     }
 
 void TBoxMenu::Draw ()
     {
-    txSetFillColor(Color_);
-    txSetColor(Color_);
-    txRectangle(Pos_.x, Pos_.y, Pos_.x+Size_.x, Pos_.y+Size_.y);
+    txSetFillColor(ColBox_);
+    txSetColor(ColLine_);
+    for (int i = 0; i < MaxBox_; i++)
+        {
+        int x0 = Menu_[i].Pos_.x;
+        int y0 = Menu_[i].Pos_.y;
+        int x1 = Menu_[i].Pos_.x + Menu_[i].Size_.x;
+        int y1 = Menu_[i].Pos_.y + Menu_[i].Size_.x;
+        txRectangle(, , Pos_.x+Size_.x, Pos_.y+Size_.y);
+        }
     txSetColor(TX_WHITE);
     txTextOut (Pos_.x+5, Pos_.y+5, Title_);
     return ;
     }
 
-void WhearMouseDown (TBoxMenu Menu[], int MenuBoxs)
+void WhearMouseDown() //(TBoxMenu Menu[], int MenuBoxs)
     {
     while (!txGetAsyncKeyState (VK_ESCAPE))
         {
@@ -101,6 +123,7 @@ void WhearMouseDown (TBoxMenu Menu[], int MenuBoxs)
 
                 }
             }
+        */
         }
     return ;
     }
