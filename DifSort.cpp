@@ -10,7 +10,9 @@ const int BackSortFill = 3;
 const int LimitRandom = 4;
 
 void FillArray  (int data[], int Left, int Right, int TypeFill);
+void BubbleSortSlow (int data[], int Left, int Right, int* CountSwap, int* CountCompare);
 void BubbleSort (int data[], int Left, int Right, int* CountSwap, int* CountCompare);
+
 void SelectSort (int data[], int Left, int Right, int* CountSwap, int* CountCompare);
 void QuickSort  (int data[], int Left, int Right, int* CountSwap, int* CountCompare);
 
@@ -19,82 +21,122 @@ void Swaps (int* a, int* b);
 
 int main()
     {
-    const int MaxCount = 20;
+    const int MaxCount = 10;
     int data[MaxCount] = {};
     int CountCompare = 0, CountSwap = 0;
-    FillArray(data, 0, MaxCount-1, BackSortFill);
+
+    FillArray(data, 0, MaxCount-1, RandomFill);
 
     $(data);
-    BubbleSort(data, 0, MaxCount - 1, &CountSwap, &CountCompare);
+    //BubbleSort(data, 0, MaxCount - 1, &CountSwap, &CountCompare);
+    //BubbleSortSlow(data, 0, MaxCount - 1, &CountSwap, &CountCompare);
+    //SelectSort(data, 0, MaxCount-1, &CountSwap, &CountCompare);
+    QuickSort (data, 0, MaxCount-1, &CountSwap, &CountCompare);
+    $(data);
     //SelectSort(10);
-    $(data);
+    $(CountSwap);
+    $(CountCompare);
 
-    //QuickSort(0, Size-1);
-    //$(data);
     return 0;
     }
 
-
-void BubbleSort(int data[], int Left, int Right, int* CountSwap, int* CountCompare)
+//------------------------------------------------------------------------------------
+void BubbleSortSlow(int data[], int Left, int Right, int* CountSwap, int* CountCompare)
     {
 
     for (int i = 0; i <= Right - Left-1; i++)
         {
         for (int j = Left; j <= Right - i -1; j++)
             {
+            *CountCompare = *CountCompare + 1;
             if (data [j] > data [j+1])
                 {
                 Swaps (&data [j], &data [j+1]);
-
+                *CountSwap = *CountSwap + 1;
                 }
             }
         }
      return;
      }
-void SelectSort (int data[], int Left, int Right, int* CountSwap, int* CountCompare)
+
+//------------------------------------------------------------------------------------
+void BubbleSort(int data[], int Left, int Right, int* CountSwap, int* CountCompare)
     {
-    /*
-    for (int first = 0; first < MaxCount -1; first++)
+
+    for (int i = 0; i <= Right - Left-1; i++)
         {
-        int number = first;
-        for (int Kand = first; Kand < MaxCount; Kand++)
+        bool IsReady = true;
+        for (int j = Left; j <= Right - i -1; j++)
             {
-            if (data [Kand] < data [number])
+
+            *CountCompare = *CountCompare + 1;
+            if (data [j] > data [j+1])
                 {
-                number = Kand;
+                Swaps (&data [j], &data [j+1]);
+                *CountSwap = *CountSwap + 1;
+                IsReady = false;
                 }
             }
-        Swaps (&data [first], &data [number]);
+        if ( IsReady ) break;
+        }
+     return;
+     }
+
+//------------------------------------------------------------------------------------
+void SelectSort (int data[], int Left, int Right, int* CountSwap, int* CountCompare)
+    {
+
+    for (int i = Left; i < Right; i++)
+        {
+        int NumberMin = i;
+        for (int j = i+1; j <= Right; j++)
+            {
+            if (data [j] < data [NumberMin])
+                {
+                NumberMin = j;
+                }
+            }
+        Swaps (&data [i], &data [NumberMin]);
 
         }
 
     return ;
-    */
+
     }
 
+//------------------------------------------------------------------------------------
 void QuickSort (int data[], int Left, int Right, int* CountSwap, int* CountCompare)
     {
-    /*
-    if (left < right)
+    if (Left < Right)
         {
-        int x = random (left, right);
-        int razd = left;
+        *CountCompare = *CountCompare +1;
+
+        int x = random (Left, Right);
+        int razd = Left;
+
         Swaps(&data[x], &data[razd]);
-        for (int i = left+1; i<=right ; i++)
+        *CountSwap = *CountSwap +1;
+
+        for (int i = Left+1; i<=Right ; i++)
             {
             if (data [i] < data [razd])
                 {
+                *CountCompare = *CountCompare +1;
+
                 Swaps(&data[i],    &data[razd+1]);
                 Swaps(&data[razd], &data[razd+1]);
+                *CountSwap = *CountSwap + 2;
+
                 razd++;
                 }
             }
-        QuickSort(left, razd-1);
-        QuickSort(razd+1, right);
+        QuickSort(data, Left,   razd-1, CountSwap, CountCompare);
+        QuickSort(data, razd+1, Right,  CountSwap, CountCompare);
 
         }
-    */
+
     }
+//------------------------------------------------------------------------------------
 
 void FillArray ( int data[], int Left, int Right, int TypeFill)
     {
