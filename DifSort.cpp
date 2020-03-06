@@ -19,7 +19,7 @@ void QuickSort  (int data[], int Left, int Right, int* CountSwap, int* CountComp
 int random (int down, int up);
 void Swaps (int* a, int* b);
 
-int main()
+/*int main()
     {
     const int MaxCount = 10;
     int data[MaxCount] = {};
@@ -39,7 +39,7 @@ int main()
 
     return 0;
     }
-
+    */
 //------------------------------------------------------------------------------------
 void BubbleSortSlow(int data[], int Left, int Right, int* CountSwap, int* CountCompare)
     {

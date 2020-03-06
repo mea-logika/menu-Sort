@@ -1,5 +1,7 @@
 #include "TXLib.h"
+#include "DifSort.cpp"
 
+//void BubbleSort(int data[], int MaxCount, int* CountSwap, int* CountCompare);
 struct TPoint
     {
     double x, y;
@@ -9,7 +11,7 @@ struct TItem
     {
      char* Title_;
      //void (*Sort_) (int MaxCount, int* CountSwap, int* CountCompare);
-     void (*Sort_) (int Menu[], int Left, int Right, int* CountSwap, int* CountCompare);
+     void (*Sort_) (int data[], int Left, int Right, int* CountSwap, int* CountCompare);
      TPoint Pos_;
 
      bool Enable_;
@@ -40,18 +42,30 @@ bool MouseInRect(TPoint A, int dx, int dy);
 int main ()
     {
 
-    txCreateWindow (800, 600);
+    txCreateWindow (520, 370);
+    txSetFillColor(TX_LIGHTGRAY);
+    txClear();
+
     TMenu MenuSort = {20, 20, 150, 40, 0, 50, TX_BLUE, TX_YELLOW, TX_WHITE,
-                           3, {{"BubbleSort", &BubbleSort},
-                               {"SelectSort", &SelectSort},
-                               {"QuickSort",  &QuickSort}
+                           4, {{"BubbleSort",   &BubbleSortSlow},
+                               {"Bubble+",      &BubbleSort},
+                               {"SelectSort",   &SelectSort},
+                               {"QuickSort",    &QuickSort}
                               }
                      };
 
     MenuSort.Init_();
     MenuSort.Draw_();
 
+    TMenu MenuFill = {20, 300, 150, 40, 160, 0, TX_GREEN, RGB(20, 200, 10), TX_YELLOW,
+                            3, {{"RandomFill", &BubbleSort},
+                               {"SortFill",   &SelectSort},
+                               {"BackSort",   &QuickSort}
+                              }
+                     };
 
+    MenuFill.Init_();
+    MenuFill.Draw_();
 
 
     while (!txGetAsyncKeyState (VK_ESCAPE))
@@ -129,7 +143,7 @@ bool MouseInRect(TPoint A, int dx, int dy)
     return vert && gor;
     }
 
-void BubbleSort(int Menu[], int MaxCount, int* CountSwap, int* CountCompare)
+void BubbleSort(int data[], int MaxCount, int* CountSwap, int* CountCompare)
     {
     /*txSetColor(TX_BLACK);
     txRectangle(300, 300,500, 400);
@@ -141,7 +155,7 @@ void BubbleSort(int Menu[], int MaxCount, int* CountSwap, int* CountCompare)
     return ;
      }
 
-void SelectSort(int Menu[], int MaxCount, int* CountSwap, int* CountCompare)
+void SelectSort(int data[], int MaxCount, int* CountSwap, int* CountCompare)
     {
     /*txSetColor(TX_BLACK);
     txRectangle(300, 300,500, 400);
@@ -153,7 +167,7 @@ void SelectSort(int Menu[], int MaxCount, int* CountSwap, int* CountCompare)
 
     return ;
     }
-void QuickSort(int Menu[], int MaxCount, int* CountSwap, int* CountCompare)
+void QuickSort(int data[], int MaxCount, int* CountSwap, int* CountCompare)
     {
     /*txSetColor(TX_BLACK);
     txRectangle(300, 300,500, 400);
